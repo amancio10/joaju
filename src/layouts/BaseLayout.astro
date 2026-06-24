@@ -1,0 +1,64 @@
+---
+import "../styles/global.css";
+
+const { title = "Joaju - Dibujando el Futuro", lang = "es" } = Astro.props;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/logo.png" />
+    <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://images.unsplash.com" />
+    <link rel="preconnect" href="https://images.pexels.com" />
+    <link
+      rel="preload"
+      as="image"
+      href="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=760&q=70"
+      media="(max-width: 767px)"
+      fetchpriority="high"
+    />
+    <link
+      rel="preload"
+      as="image"
+      href="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=1600&q=80"
+      media="(min-width: 768px)"
+      fetchpriority="high"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@300;400;500;600;700;800;900&family=Nunito:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(255,195,0,0.18),transparent_28%),radial-gradient(circle_at_top_right,rgba(255,87,51,0.16),transparent_24%),linear-gradient(180deg,#fcfcfa_0%,#f6f8f5_100%)] font-sans text-joaju-dark antialiased">
+    <slot />
+    <script is:inline>
+      const revealElements = () => {
+        const elements = document.querySelectorAll("[data-animate]");
+        const observer = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("is-visible");
+                observer.unobserve(entry.target);
+              }
+            }
+          },
+          { threshold: 0.2, rootMargin: "0px 0px -10% 0px" }
+        );
+
+        elements.forEach((element) => observer.observe(element));
+      };
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", revealElements, { once: true });
+      } else {
+        revealElements();
+      }
+    </script>
+  </body>
+</html>

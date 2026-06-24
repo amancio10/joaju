@@ -1,0 +1,57 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import LanguageSwitcher from "./LanguageSwitcher.astro";
+import { activityYears, getYearActivities } from "../data/activities";
+import { useL10n } from "../data/translations";
+
+const { lang = "es" } = Astro.props;
+const { t, link } = useL10n(lang);
+
+const activitiesByYear = activityYears.map((year) => ({
+  year,
+  items: getYearActivities(year, lang)
+}));
+---
+
+<BaseLayout title={t("activitiesTitle")} lang={lang}>
+  <main class="min-h-screen py-24">
+    <section class="mx-auto w-[min(1120px,calc(100%-2rem))]">
+      <div class="flex items-center justify-between gap-4 flex-wrap mb-8">
+        <a href={link("/#actividades")} class="text-sm font-semibold text-joaju-muted transition hover:text-joaju-orange">
+          {t("nav.backToHome")}
+        </a>
+        <LanguageSwitcher />
+      </div>
+
+      <div class="mt-6 max-w-3xl">
+        <span class="mb-4 inline-block rounded-full bg-white/80 px-3.5 py-2 text-[0.78rem] font-extrabold uppercase tracking-[0.16em] text-joaju-orange">
+          {t("act.exploreTitle").split(" entre ")[0]}
+        </span>
+        <h1 class="m-0 text-[clamp(2.8rem,6vw,4.8rem)] font-black leading-[0.95] text-joaju-dark">
+          {t("act.exploreTitle")}
+        </h1>
+        <p class="mt-5 text-lg leading-8 text-joaju-muted">
+          {t("act.exploreDesc")}
+        </p>
+      </div>
+
+      <div class="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        {activitiesByYear.map(({ year, items }) => (
+          <a
+            href={link(`/actividades/${year}`)}
+            class="group rounded-[1.8rem] border border-joaju-dark/10 bg-white/85 p-7 shadow-soft transition hover:-translate-y-1"
+          >
+            <span class="text-5xl font-black text-joaju-dark/68">{year}</span>
+            <h2 class="mt-4 text-2xl font-black text-joaju-dark">{t("act.title")} {year}</h2>
+            <p class="mt-3 leading-7 text-joaju-muted">
+              {items.length} {items.length === 1 ? t("act.availableSingular") : t("act.availablePlural")}
+            </p>
+            <span class="mt-6 inline-flex font-semibold text-joaju-orange transition group-hover:translate-x-1">
+              {t("act.viewFullYear")}
+            </span>
+          </a>
+        ))}
+      </div>
+    </section>
+  </main>
+</BaseLayout>

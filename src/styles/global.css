@@ -1,0 +1,108 @@
+@import "tailwindcss";
+
+@theme {
+  --color-joaju-yellow: #ffc300;
+  --color-joaju-orange: #ff5733;
+  --color-joaju-green: #2ecc71;
+  --color-joaju-dark: #0a3a2a;
+  --color-joaju-muted: #5f6f67;
+  --color-joaju-cream: #f7f7f2;
+  --shadow-soft: 0 24px 60px rgba(10, 58, 42, 0.12);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
+@layer utilities {
+  .font-joaju-logo {
+    font-family: "Baloo 2", "Trebuchet MS", sans-serif;
+  }
+
+  .font-joaju-tagline {
+    font-family: "Nunito", "Trebuchet MS", sans-serif;
+  }
+
+  .shadow-soft {
+    box-shadow: var(--shadow-soft);
+  }
+
+  .text-hero-logo {
+    text-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+  }
+
+  .bg-hero-overlay {
+    background:
+      linear-gradient(135deg, rgba(10, 58, 42, 0.94), rgba(10, 58, 42, 0.72)),
+      url("https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=760&q=70") center/cover;
+  }
+
+  .glow-yellow {
+    background: rgba(255, 195, 0, 0.7);
+    animation: float 9s ease-in-out infinite;
+  }
+
+  .glow-orange {
+    background: rgba(255, 87, 51, 0.55);
+    animation: float 11s ease-in-out infinite reverse;
+  }
+
+  .bg-identity-texture {
+    background-image: url("https://images.unsplash.com/photo-1516589091380-5d8e87df6999?auto=format&fit=crop&w=760&q=70");
+  }
+}
+
+[data-animate] {
+  opacity: 0;
+  transform: translateY(38px);
+  transition:
+    opacity 700ms ease,
+    transform 700ms ease;
+}
+
+[data-animate="scale"] {
+  transform: translateY(24px) scale(0.94);
+}
+
+[data-animate].is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+main > section:not(#inicio) {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
+}
+
+@media (min-width: 768px) {
+  .bg-hero-overlay {
+    background:
+      linear-gradient(135deg, rgba(10, 58, 42, 0.94), rgba(10, 58, 42, 0.72)),
+      url("https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=1600&q=80") center/cover;
+  }
+
+  .bg-identity-texture {
+    background-image: url("https://images.unsplash.com/photo-1516589091380-5d8e87df6999?auto=format&fit=crop&w=1400&q=80");
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(12px, -18px, 0);
+  }
+}

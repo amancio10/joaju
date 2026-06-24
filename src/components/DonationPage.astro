@@ -1,0 +1,131 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import LanguageSwitcher from "./LanguageSwitcher.astro";
+import { useL10n } from "../data/translations";
+
+const { lang = "es" } = Astro.props;
+const { t, link } = useL10n(lang);
+---
+
+<BaseLayout title={t("donationsTitle")} lang={lang}>
+  <main>
+    <section class="relative overflow-clip py-24">
+      <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,195,0,0.14),transparent_22%),radial-gradient(circle_at_top_right,rgba(255,87,51,0.12),transparent_20%),linear-gradient(180deg,rgba(255,255,255,0.82),rgba(255,255,255,0.72))]"></div>
+      <div class="relative z-10 mx-auto grid w-[min(1120px,calc(100%-2rem))] gap-10 lg:grid-cols-[0.95fr_1.05fr]">
+        <div data-animate="up">
+          <div class="flex items-center justify-between gap-4 flex-wrap">
+            <a href={link("/")} class="inline-flex items-center gap-2 rounded-full bg-white/80 px-4 py-2 text-sm font-bold uppercase tracking-[0.16em] text-joaju-orange shadow-sm transition hover:text-joaju-dark">
+              {t("nav.backToHome")}
+            </a>
+            <LanguageSwitcher />
+          </div>
+          <div class="mt-8">
+            <span class="inline-block text-[0.78rem] font-extrabold uppercase tracking-[0.16em] text-joaju-orange">
+              {t("donationsTitle").split(" | ")[0]}
+            </span>
+          </div>
+          <h1 class="m-0 mt-4 text-[clamp(2.6rem,6vw,4.8rem)] leading-[0.98] font-black text-joaju-dark">
+            {t("don.title")}
+          </h1>
+          <p class="mt-6 text-lg leading-8 text-joaju-muted">
+            {t("don.desc")}
+          </p>
+
+          <div class="mt-8 rounded-[1.8rem] border border-joaju-dark/10 bg-white/85 p-6 shadow-soft">
+            <h2 class="m-0 text-xl font-black text-joaju-dark">{t("don.waysTitle")}</h2>
+            <div class="mt-5 grid gap-3 text-joaju-muted">
+              <div class="rounded-xl bg-joaju-cream px-4 py-3">{t("don.way1")}</div>
+              <div class="rounded-xl bg-joaju-cream px-4 py-3">{t("don.way2")}</div>
+              <div class="rounded-xl bg-joaju-cream px-4 py-3">{t("don.way3")}</div>
+              <div class="rounded-xl bg-joaju-cream px-4 py-3">{t("don.way4")}</div>
+            </div>
+          </div>
+        </div>
+
+        <form
+          data-animate="scale"
+          action="https://formsubmit.co/joajuvoluntario@gmail.com"
+          method="post"
+          class="rounded-[2rem] border border-joaju-dark/10 bg-white p-7 shadow-soft"
+        >
+          <input type="hidden" name="_subject" value={t("form.subject")} />
+          <input type="hidden" name="_template" value="table" />
+          <input type="hidden" name="_next" value={`https://joaju-phi.vercel.app/${lang === 'es' ? '' : lang + '/'}?donacion=enviada`} />
+          <input type="text" name="_honey" class="hidden" tabindex="-1" autocomplete="off" />
+
+          <div class="grid gap-5 md:grid-cols-2">
+            <label class="grid gap-2">
+              <span class="text-sm font-bold uppercase tracking-[0.14em] text-joaju-orange">{t("form.name")}</span>
+              <input
+                type="text"
+                name="nombre"
+                required
+                placeholder={t("form.namePlaceholder")}
+                class="rounded-xl border border-joaju-dark/10 bg-joaju-cream px-4 py-3 text-joaju-dark outline-none transition focus:border-joaju-orange"
+              />
+            </label>
+
+            <label class="grid gap-2">
+              <span class="text-sm font-bold uppercase tracking-[0.14em] text-joaju-orange">{t("form.email")}</span>
+              <input
+                type="email"
+                name="email"
+                required
+                placeholder={t("form.emailPlaceholder")}
+                class="rounded-xl border border-joaju-dark/10 bg-joaju-cream px-4 py-3 text-joaju-dark outline-none transition focus:border-joaju-orange"
+              />
+            </label>
+
+            <label class="grid gap-2 md:col-span-2">
+              <span class="text-sm font-bold uppercase tracking-[0.14em] text-joaju-orange">{t("form.phone")}</span>
+              <input
+                type="tel"
+                name="telefono"
+                placeholder={t("form.phonePlaceholder")}
+                class="rounded-xl border border-joaju-dark/10 bg-joaju-cream px-4 py-3 text-joaju-dark outline-none transition focus:border-joaju-orange"
+              />
+            </label>
+          </div>
+
+          <fieldset class="mt-6">
+            <legend class="text-sm font-bold uppercase tracking-[0.14em] text-joaju-orange">{t("form.howHelp")}</legend>
+            <div class="mt-4 grid gap-3 sm:grid-cols-2">
+              <label class="flex items-center gap-3 rounded-xl border border-joaju-dark/10 bg-joaju-cream px-4 py-3 text-joaju-dark">
+                <input type="checkbox" name="ayuda" value="Aporte monetario" class="accent-[#ff5733]" />
+                <span>{t("form.optMonetary")}</span>
+              </label>
+              <label class="flex items-center gap-3 rounded-xl border border-joaju-dark/10 bg-joaju-cream px-4 py-3 text-joaju-dark">
+                <input type="checkbox" name="ayuda" value="Insumos" class="accent-[#ff5733]" />
+                <span>{t("form.optClothing")}</span>
+              </label>
+              <label class="flex items-center gap-3 rounded-xl border border-joaju-dark/10 bg-joaju-cream px-4 py-3 text-joaju-dark">
+                <input type="checkbox" name="ayuda" value="Servicios o alianzas" class="accent-[#ff5733]" />
+                <span>{t("form.optServices")}</span>
+              </label>
+              <label class="flex items-center gap-3 rounded-xl border border-joaju-dark/10 bg-joaju-cream px-4 py-3 text-joaju-dark">
+                <input type="checkbox" name="ayuda" value="Otros" class="accent-[#ff5733]" />
+                <span>{t("form.optOthers")}</span>
+              </label>
+            </div>
+          </fieldset>
+
+          <label class="mt-6 grid gap-2">
+            <span class="text-sm font-bold uppercase tracking-[0.14em] text-joaju-orange">{t("form.message")}</span>
+            <textarea
+              name="mensaje"
+              placeholder={t("form.messagePlaceholder")}
+              class="min-h-36 rounded-xl border border-joaju-dark/10 bg-joaju-cream px-4 py-3 text-joaju-dark outline-none transition focus:border-joaju-orange"
+            ></textarea>
+          </label>
+
+          <button
+            type="submit"
+            class="mt-8 inline-flex min-w-[220px] items-center justify-center rounded-2xl bg-joaju-orange px-6 py-4 font-bold text-white transition hover:-translate-y-0.5 hover:bg-joaju-dark"
+          >
+            {t("form.btnSubmit")}
+          </button>
+        </form>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

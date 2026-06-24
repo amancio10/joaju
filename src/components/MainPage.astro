@@ -1,0 +1,624 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import LanguageSwitcher from "./LanguageSwitcher.astro";
+import { activityYears } from "../data/activities";
+import { useL10n } from "../data/translations";
+
+const { lang = "es" } = Astro.props;
+const { t, link } = useL10n(lang);
+
+const committee = [
+  { name: "Ada Melgarejo", role: "Organizadora", image: "/miembros/ada.webp" },
+  { name: "Angélica Vargas", role: "Presidenta", image: "/miembros/angelica.webp" },
+  { name: "Carlos Armoa", role: "Organizador", image: "/miembros/carlos.webp" },
+  { name: "Cindy Troche", role: "Organizadora", image: "/miembros/cindy.webp" },
+  { name: "Daiana Ruiz", role: "Organizadora", image: "/miembros/daiana.webp" },
+  { name: "Diego Maciel", role: "Organizador", image: "/miembros/diego-maciel.webp" },
+  { name: "Elianne Añazco", role: "Organizadora", image: "/miembros/elianne.webp" },
+  { name: "Fernando Baez", role: "Organizador", image: "/miembros/fernando.webp" },
+  { name: "Gabriela González", role: "Organizadora", image: "/miembros/gabriela.webp" },
+  { name: "Gustavo Gamarra", role: "Organizador", image: "/miembros/gustavo.webp" },
+  { name: "Leticia Fernandez", role: "Redes Sociales y Marketing", image: "/miembros/leticia.webp" },
+  { name: "Marcelo Villalba", role: "Secretario", image: "/miembros/marcelo.webp" },
+  { name: "Maria Inés Benitez", role: "Organizadora", image: "/miembros/ines.webp" },
+  { name: "Montserrat Moré", role: "Organizadora", image: "/miembros/montserrat.webp" },
+  { name: "Sofia Torres", role: "Organizadora", image: "/miembros/sofia.webp" },
+  { name: "Amâncio Santos", role: "Organizador", image: "/miembros/amancio.webp" }
+];
+
+const committeeRoles: Record<string, string> = {
+  "Organizadora": "role.organizerF",
+  "Organizador": "role.organizer",
+  "Presidenta": "role.president",
+  "Redes Sociales y Marketing": "role.socialMedia",
+  "Secretario": "role.secretary"
+};
+
+const pillars = [
+  {
+    title: t("essence.mission"),
+    description: t("essence.mission.desc"),
+    image: "https://images.pexels.com/photos/17044199/pexels-photo-17044199.jpeg?auto=compress&cs=tinysrgb&w=900"
+  },
+  {
+    title: t("essence.vision"),
+    description: t("essence.vision.desc"),
+    image: "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=900&q=75"
+  }
+];
+
+const quotes = [
+  {
+    quote: t("quote1.text"),
+    name: "Fabricio Caon",
+    role: t("quote1.role"),
+    image: "/frases/fabricio.webp"
+  },
+  {
+    quote: t("quote2.text"),
+    name: "Paz Da Re",
+    role: t("quote2.role"),
+    image: "/frases/paz.webp"
+  }
+];
+
+const announcements = [
+  {
+    title: t("announcement1.title"),
+    description: t("announcement1.desc"),
+    tone: "yellow",
+    image: "https://images.unsplash.com/photo-1615461066841-6116e61058f4?auto=format&fit=crop&w=700&q=75"
+  },
+  {
+    title: t("announcement2.title"),
+    description: t("announcement2.desc"),
+    tone: "orange",
+    image: "https://images.unsplash.com/photo-1584515933487-779824d29309?auto=format&fit=crop&w=700&q=75"
+  },
+  {
+    title: t("announcement3.title"),
+    description: t("announcement3.desc"),
+    tone: "green",
+    image: "https://images.unsplash.com/photo-1516826957135-700dedea698c?auto=format&fit=crop&w=700&q=75"
+  }
+];
+
+const navItems = [
+  { href: "#quienes-somos", label: t("nav.whoWeAre") },
+  { href: "#equipo", label: t("nav.team") },
+  { href: "#mision-vision", label: t("nav.missionVision") },
+  { href: "#actividades", label: t("nav.activities") },
+  { href: link("/donaciones"), label: t("nav.bePart"), cta: true }
+];
+
+const toneMap = {
+  yellow: {
+    cardGlow: "after:bg-joaju-yellow/20",
+    icon: "from-joaju-yellow to-amber-400"
+  },
+  orange: {
+    cardGlow: "after:bg-joaju-orange/20",
+    icon: "from-joaju-orange to-rose-400"
+  },
+  green: {
+    cardGlow: "after:bg-joaju-green/20",
+    icon: "from-joaju-green to-emerald-300"
+  }
+};
+
+const remoteImage = (image: string, width: number, quality = 72) => {
+  const url = new URL(image);
+  url.searchParams.set("w", String(width));
+  if (url.hostname.includes("unsplash.com")) {
+    url.searchParams.set("auto", "format");
+    url.searchParams.set("fit", "crop");
+    url.searchParams.set("q", String(quality));
+  }
+  if (url.hostname.includes("pexels.com")) {
+    url.searchParams.set("auto", "compress");
+    url.searchParams.set("cs", "tinysrgb");
+  }
+  return url.toString();
+};
+
+const remoteSrcset = (image: string, widths: number[], quality = 72) =>
+  widths.map((width) => `${remoteImage(image, width, quality)} ${width}w`).join(", ");
+---
+
+<BaseLayout title={t("title")} lang={lang}>
+  <header class="sticky top-0 z-20 border-b border-joaju-dark/8 bg-[rgba(247,247,242,0.72)] backdrop-blur-xl">
+    <div class="mx-auto flex w-[min(1120px,calc(100%-2rem))] items-center justify-between gap-4 py-1.5 md:py-2">
+      <a href="#inicio" class="inline-flex items-center">
+        <img src="/logo.png" alt="Logo Joaju" width="232" height="92" fetchpriority="high" decoding="async" class="h-[40px] w-auto object-contain md:h-[46px]" />
+      </a>
+      <nav class="hidden flex-wrap items-center gap-7 text-[0.95rem] font-semibold text-joaju-muted md:flex lg:gap-9">
+        {navItems.map((item) => (
+          <a
+            href={item.href}
+            class:list={[
+              "transition",
+              item.cta
+                ? "inline-flex min-w-[160px] items-center justify-center rounded-xl bg-joaju-orange px-5 py-2.5 text-[0.92rem] font-bold text-white shadow-sm hover:-translate-y-0.5 hover:bg-joaju-dark"
+                : "px-1 hover:text-joaju-orange"
+            ]}
+          >
+            {item.label}
+          </a>
+        ))}
+        <LanguageSwitcher />
+      </nav>
+
+      <details data-mobile-menu class="relative md:hidden">
+        <summary class="flex h-10 w-10 cursor-pointer list-none items-center justify-center rounded-xl border border-joaju-dark/10 bg-white/70 text-joaju-dark shadow-sm marker:content-none">
+          <span class="sr-only">Abrir menu</span>
+          <span class="flex flex-col gap-1.5">
+            <span class="block h-0.5 w-5 rounded-full bg-current"></span>
+            <span class="block h-0.5 w-5 rounded-full bg-current"></span>
+            <span class="block h-0.5 w-5 rounded-full bg-current"></span>
+          </span>
+        </summary>
+        <div class="absolute right-0 top-[calc(100%+0.75rem)] min-w-[220px] overflow-hidden rounded-2xl border border-joaju-dark/10 bg-white/95 p-2 text-joaju-muted shadow-soft backdrop-blur">
+          {navItems.map((item) => (
+            <a
+              href={item.href}
+              data-mobile-menu-link
+              class:list={[
+                "block rounded-xl px-4 py-3 font-semibold transition",
+                item.cta
+                  ? "bg-joaju-orange text-center font-extrabold text-white hover:bg-joaju-dark"
+                  : "hover:bg-joaju-dark/5 hover:text-joaju-orange"
+              ]}
+            >
+              {item.label}
+            </a>
+          ))}
+          <div class="border-t border-joaju-dark/10 my-2 pt-2 px-2 flex justify-center">
+            <LanguageSwitcher />
+          </div>
+        </div>
+      </details>
+    </div>
+  </header>
+
+  <div
+    id="donation-success"
+    class="fixed left-1/2 top-24 z-50 hidden w-[min(92vw,520px)] -translate-x-1/2 rounded-2xl border border-joaju-green/30 bg-white px-5 py-4 text-joaju-dark shadow-soft"
+    role="status"
+    aria-live="polite"
+  >
+    <div class="flex items-start justify-between gap-4">
+      <div>
+        <p class="m-0 font-extrabold text-joaju-green">{t("success.title")}</p>
+        <p class="m-0 mt-1 text-sm leading-6 text-joaju-muted">{t("success.description")}</p>
+      </div>
+      <button
+        type="button"
+        data-close-donation-success
+        class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-joaju-dark/10 text-xl leading-none text-joaju-muted transition hover:bg-joaju-dark/5 hover:text-joaju-dark"
+        aria-label={t("success.close")}
+      >
+        ×
+      </button>
+    </div>
+  </div>
+
+  <main>
+    <section id="inicio" class="relative flex min-h-[calc(100svh-57px)] items-center overflow-clip py-16 md:min-h-[calc(100svh-62px)]">
+      <div class="bg-hero-overlay absolute inset-0"></div>
+      <div class="absolute inset-0 bg-[linear-gradient(110deg,rgba(10,58,42,0.92)_0%,rgba(10,58,42,0.78)_42%,rgba(10,58,42,0.38)_100%)]"></div>
+      <div class="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-joaju-dark/48 to-transparent"></div>
+      <div class="pointer-events-none absolute left-0 top-0 h-full w-full opacity-20 [background-image:linear-gradient(120deg,transparent_0_44%,rgba(255,195,0,0.45)_44%_45%,transparent_45%_100%),linear-gradient(120deg,transparent_0_58%,rgba(255,87,51,0.5)_58%_59%,transparent_59%_100%)]"></div>
+
+      <div class="relative z-10 mx-auto grid w-[min(1120px,calc(100%-2rem))] items-center gap-12 md:grid-cols-[1.05fr_0.95fr]">
+        <div class="text-white" data-animate="up">
+          <span class="inline-flex rounded-full border border-white/18 bg-white/10 px-4 py-2 text-[0.78rem] font-extrabold uppercase tracking-[0.16em] text-joaju-yellow backdrop-blur">
+            {t("hero.tagline")}
+          </span>
+          <h1 class="font-joaju-logo text-hero-logo mt-7 mb-0 text-[clamp(4.8rem,12vw,9.2rem)] leading-[0.82] font-extrabold tracking-[0.01em]">{t("hero.title")}</h1>
+          <p class="font-joaju-tagline mt-4 max-w-[34rem] text-[clamp(1.35rem,2.8vw,2.2rem)] font-bold leading-tight tracking-[0.03em] text-white/90">
+            {t("hero.sub")}
+          </p>
+          <p class="mt-6 max-w-[38rem] text-lg leading-8 text-white/76">
+            {t("hero.desc")}
+          </p>
+          <div class="mt-10 flex flex-wrap gap-4">
+            <a class="inline-flex min-w-[220px] items-center justify-center rounded-2xl bg-joaju-yellow px-6 py-4 font-extrabold text-joaju-dark transition hover:-translate-y-0.5 hover:bg-white" href="#voluntariado">
+              {t("hero.btnHelp")}
+            </a>
+            <a class="inline-flex min-w-[180px] items-center justify-center rounded-2xl border border-white/24 bg-white/10 px-6 py-4 font-extrabold text-white backdrop-blur transition hover:-translate-y-0.5 hover:bg-white/18" href="#quienes-somos">
+              {t("hero.btnKnow")}
+            </a>
+          </div>
+        </div>
+
+        <div class="relative hidden min-h-[520px] md:block" data-animate="scale">
+          <img src="/historia/historia-4.webp" alt="Voluntariado Joaju" width="512" height="385" loading="lazy" decoding="async" class="absolute right-0 top-4 h-[360px] w-[72%] rounded-[2rem] border border-white/18 object-cover shadow-[0_28px_70px_rgba(0,0,0,0.22)]" />
+          <img src="/historia/historia-2.webp" alt="Encuentro de voluntarios Joaju" width="512" height="384" loading="lazy" decoding="async" class="absolute left-0 bottom-14 h-[245px] w-[54%] rounded-[1.6rem] border border-white/18 object-cover shadow-[0_22px_55px_rgba(0,0,0,0.2)]" />
+          <div class="absolute bottom-0 right-8 w-[min(260px,70%)] rounded-[1.4rem] border border-white/18 bg-white/12 p-5 text-white shadow-[0_18px_45px_rgba(0,0,0,0.16)] backdrop-blur-xl">
+            <span class="text-4xl font-black text-joaju-yellow">{t("hero.counter")}</span>
+            <p class="mt-2 font-bold leading-6 text-white/82">{t("hero.counterDesc")}</p>
+          </div>
+          <div class="absolute right-12 top-0 h-20 w-20 rounded-full border-[14px] border-joaju-orange/80"></div>
+          <div class="absolute left-16 top-16 h-14 w-14 rotate-12 rounded-xl bg-joaju-yellow/85"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="quienes-somos" class="bg-white/55 py-24">
+      <div class="mx-auto grid w-[min(1120px,calc(100%-2rem))] items-center gap-10 md:grid-cols-[1.05fr_0.95fr]">
+        <div data-animate="up">
+          <span class="mb-4 inline-block text-[0.78rem] font-extrabold uppercase tracking-[0.16em] text-joaju-orange">
+            {t("who.sub")}
+          </span>
+          <h2 class="m-0 text-[clamp(2.4rem,5vw,4rem)] leading-[1.02] font-black text-joaju-dark">
+            {t("who.title")}
+          </h2>
+          <div class="mt-6 space-y-5 text-lg leading-8 text-joaju-muted">
+            <p>{t("who.p1")}</p>
+            <p class="font-semibold text-joaju-dark">{t("who.p2")}</p>
+          </div>
+        </div>
+
+        <div class="relative min-h-[360px]" data-animate="scale">
+          <div class="glow-yellow absolute left-[6%] top-[10%] h-[140px] w-[140px] rounded-full blur-[70px]"></div>
+          <div class="glow-orange absolute bottom-[8%] right-[4%] h-[180px] w-[180px] rounded-full blur-[70px]"></div>
+          <div class="relative overflow-hidden rounded-[2rem] bg-gradient-to-b from-white/90 via-white/18 to-joaju-dark/10 p-px shadow-[inset_0_1px_0_rgba(255,255,255,0.88),0_-10px_28px_rgba(255,255,255,0.48),0_22px_38px_rgba(10,58,42,0.18)]">
+            <img
+              src={remoteImage("https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=900&q=75", 900, 72)}
+              srcset={remoteSrcset("https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=900&q=75", [420, 700, 900], 72)}
+              sizes="(max-width: 767px) calc(100vw - 4rem), 520px"
+              alt="Comunidad Joaju"
+              width="900"
+              height="420"
+              loading="lazy"
+              decoding="async"
+              class="h-[420px] w-full rounded-[1.95rem] object-cover shadow-[inset_0_1px_0_rgba(255,255,255,0.5)]"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="identidad-visual" class="relative overflow-clip py-24">
+      <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,195,0,0.12),transparent_20%),radial-gradient(circle_at_top_right,rgba(255,87,51,0.12),transparent_18%),linear-gradient(180deg,rgba(255,255,255,0.75),rgba(255,255,255,0.62))]"></div>
+      <div class="bg-identity-texture pointer-events-none absolute inset-0 opacity-35 bg-cover bg-center grayscale"></div>
+
+      <div class="relative z-10 mx-auto w-[min(1120px,calc(100%-2rem))]">
+        <div class="mx-auto max-w-5xl text-center" data-animate="up">
+          <span class="mb-4 inline-block text-[0.78rem] font-extrabold uppercase tracking-[0.16em] text-joaju-orange">
+            {t("visual.sub")}
+          </span>
+          <h2 class="m-0 text-[clamp(3rem,7vw,5.4rem)] leading-[0.95] font-black text-joaju-dark">
+            <span class="text-joaju-yellow">I</span>dentidad <span class="text-joaju-yellow">V</span>isual
+          </h2>
+          <p class="mx-auto mt-8 max-w-4xl text-xl font-semibold leading-9 text-joaju-dark">
+            {t("visual.desc")}
+          </p>
+        </div>
+
+        <div class="mx-auto mt-10 max-w-4xl text-center" data-animate="up">
+          <p class="text-lg leading-8 text-joaju-muted">
+            {t("visual.p1")}
+          </p>
+        </div>
+
+        <div class="mx-auto mt-0 max-w-xl overflow-hidden" data-animate="scale">
+          <img
+            src="/imagen-identidad-visual.webp"
+            alt="Composición de identidad visual de Joaju"
+            width="1152"
+            height="440"
+            loading="lazy"
+            decoding="async"
+            class="h-auto w-full object-contain object-center md:h-[220px] md:object-cover"
+          />
+        </div>
+
+        <div class="mx-auto mt-0 max-w-4xl text-center" data-animate="up">
+          <p class="text-xl font-semibold leading-9 text-joaju-dark">
+            {t("visual.p2")}
+          </p>
+        </div>
+
+        <div class="pointer-events-none absolute left-6 top-8 hidden h-14 w-14 rounded-full border-2 border-joaju-orange/50 lg:block"></div>
+        <div class="pointer-events-none absolute left-24 bottom-10 hidden h-10 w-10 rounded-full border-2 border-emerald-400/60 lg:block"></div>
+        <div class="pointer-events-none absolute right-10 top-8 hidden h-14 w-14 rounded-full border-2 border-amber-400/60 lg:block"></div>
+        <div class="pointer-events-none absolute right-28 top-18 hidden h-12 w-12 rounded-full border-2 border-orange-300/70 lg:block"></div>
+        <div class="pointer-events-none absolute right-40 top-10 hidden h-12 w-12 rounded-full border-2 border-emerald-300/70 lg:block"></div>
+      </div>
+    </section>
+
+    <section class="py-24">
+      <div class="mx-auto w-[min(1120px,calc(100%-2rem))]">
+        <div class="mx-auto mb-12 max-w-[42rem] text-center" data-animate="up">
+          <span class="mb-4 inline-block text-[0.78rem] font-extrabold uppercase tracking-[0.16em] text-joaju-orange">{t("announcements.sub")}</span>
+          <h2 class="m-0 text-[clamp(2.2rem,5vw,3.6rem)] leading-[1.05] font-black">{t("announcements.title")}</h2>
+        </div>
+        <div class="grid gap-6 md:grid-cols-3">
+          {announcements.map((item, index) => (
+            <article
+              class={`relative overflow-hidden rounded-[1.6rem] border border-joaju-dark/10 bg-white/84 p-6 shadow-soft after:absolute after:-right-[20%] after:-bottom-[30%] after:h-[180px] after:w-[180px] after:rounded-full ${toneMap[item.tone as keyof typeof toneMap].cardGlow}`}
+              data-animate="up"
+              style={`transition-delay:${index * 140}ms`}
+            >
+              <div class="mb-5 overflow-hidden rounded-[1.25rem]">
+              <img
+                src={remoteImage(item.image, 700, 72)}
+                srcset={remoteSrcset(item.image, [360, 520, 700], 72)}
+                sizes="(max-width: 767px) calc(100vw - 5rem), 33vw"
+                alt={item.title}
+                width="700"
+                height="416"
+                loading="lazy"
+                decoding="async"
+                class="h-52 w-full object-cover"
+              />
+              </div>
+              <h3 class="m-0 text-[1.45rem] font-bold">{item.title}</h3>
+              <p class="mt-3 leading-7 text-joaju-muted">{item.description}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section id="equipo" class="bg-white/55 py-24">
+      <div class="mx-auto w-[min(1120px,calc(100%-2rem))]">
+        <div class="mx-auto mb-12 max-w-[42rem] text-center" data-animate="up">
+          <span class="mb-4 inline-block text-[0.78rem] font-extrabold uppercase tracking-[0.16em] text-joaju-orange">{t("team.sub")}</span>
+          <h2 class="m-0 text-[clamp(2.2rem,5vw,3.6rem)] leading-[1.05] font-black">{t("team.title")}</h2>
+        </div>
+        <div class="flex flex-wrap justify-center gap-6">
+          {committee.map((person, index) => (
+            <article class="w-full rounded-[1.6rem] border border-joaju-dark/10 bg-white/84 p-6 text-center shadow-soft sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-4.5rem)/4)]" data-animate="up" style={`transition-delay:${index * 90}ms`}>
+              <div class="mx-auto mb-4 h-[134px] w-[134px] rounded-full bg-gradient-to-b from-white/90 via-white/18 to-joaju-dark/12 p-px shadow-[inset_0_1px_0_rgba(255,255,255,0.88),0_-7px_18px_rgba(255,255,255,0.5),0_14px_24px_rgba(10,58,42,0.18)]">
+                <img src={person.image} alt={person.name} width="264" height="264" loading="lazy" decoding="async" class="h-full w-full rounded-full object-cover" />
+              </div>
+              <h3 class="m-0 text-[1.45rem] font-bold">{person.name}</h3>
+              <p class="mt-2 font-bold text-joaju-orange">{t(committeeRoles[person.role] || person.role)}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section id="mision-vision" class="py-24">
+      <div class="mx-auto w-[min(1120px,calc(100%-2rem))]">
+        <div class="mx-auto mb-12 max-w-[42rem] text-center" data-animate="up">
+          <span class="mb-4 inline-block text-[0.78rem] font-extrabold uppercase tracking-[0.16em] text-joaju-orange">{t("essence.sub")}</span>
+          <h2 class="m-0 text-[clamp(2.2rem,5vw,3.6rem)] leading-[1.05] font-black">{t("essence.title")}</h2>
+        </div>
+        <div class="grid gap-6 md:grid-cols-2">
+          {pillars.map((pillar, index) => (
+            <article class="relative min-h-[540px] overflow-hidden rounded-[2rem] shadow-soft max-sm:min-h-[420px]" data-animate="scale" style={`transition-delay:${index * 150}ms`}>
+              <img
+                src={remoteImage(pillar.image, 900, 72)}
+                srcset={remoteSrcset(pillar.image, [420, 700, 900], 72)}
+                sizes="(max-width: 767px) calc(100vw - 2rem), 548px"
+                alt={pillar.title}
+                width="900"
+                height="540"
+                loading="lazy"
+                decoding="async"
+                class="h-full w-full object-cover"
+              />
+              <div class="absolute inset-0 bg-gradient-to-b from-joaju-dark/10 to-joaju-dark/88"></div>
+              <div class="absolute inset-x-0 bottom-0 p-8 text-white">
+                <h3 class="m-0 text-[1.45rem] font-bold">{pillar.title}</h3>
+                <p class="mt-4 max-w-[32rem] leading-7 text-white/86">{pillar.description}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-white/55 pb-16 pt-4">
+      <div class="mx-auto w-[min(1120px,calc(100%-2rem))]">
+        <div class="mx-auto grid max-w-5xl gap-5 md:grid-cols-2">
+          {quotes.map((item, index) => (
+            <article class="relative overflow-hidden rounded-2xl border border-joaju-dark/8 bg-white/82 p-6 shadow-[0_18px_45px_rgba(10,58,42,0.08)]" data-animate="up" style={`transition-delay:${index * 120}ms`}>
+              <div class="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-joaju-orange/25 via-joaju-orange to-joaju-orange/25"></div>
+              <div class="flex flex-col gap-5 sm:flex-row sm:items-start">
+                <div class="h-[98px] w-[98px] shrink-0 rounded-xl bg-gradient-to-b from-white/88 via-white/16 to-joaju-dark/12 p-px shadow-[inset_0_1px_0_rgba(255,255,255,0.86),0_-6px_16px_rgba(255,255,255,0.45),0_12px_22px_rgba(10,58,42,0.17)]">
+                  <img src={item.image} alt={item.name} width="440" height="440" loading="lazy" decoding="async" class="h-full w-full rounded-[0.7rem] object-cover" />
+                </div>
+                <div>
+                  <blockquote class="m-0 text-[1.02rem] font-normal italic leading-7 text-joaju-dark/82">
+                  “{item.quote}”
+                  </blockquote>
+                  <div class="mt-5 h-px w-16 bg-joaju-orange/25"></div>
+                  <p class="mt-4 text-[0.95rem] font-extrabold text-joaju-dark">{item.name}</p>
+                  <p class="mt-1 text-sm font-bold text-joaju-orange/85">{item.role}</p>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-white/55 py-24">
+      <div class="mx-auto w-[min(1120px,calc(100%-2rem))]">
+        <div class="mx-auto max-w-4xl text-center" data-animate="up">
+          <span class="mb-4 inline-block text-[0.78rem] font-extrabold uppercase tracking-[0.16em] text-joaju-orange">
+            {t("history.sub")}
+          </span>
+          <h2 class="m-0 text-[clamp(2.4rem,5vw,4rem)] leading-[1.02] font-black text-joaju-dark">
+            {t("history.title")}
+          </h2>
+        </div>
+
+        <div class="mt-12 grid gap-6 lg:grid-cols-2">
+          <article class="overflow-hidden rounded-[1.8rem] border border-joaju-dark/10 bg-white/86 shadow-soft lg:col-span-2 lg:grid lg:grid-cols-[1.05fr_0.95fr]" data-animate="up">
+            <div class="p-7 md:p-9">
+              <span class="text-sm font-extrabold uppercase tracking-[0.16em] text-joaju-orange">{t("history.2018.label")}</span>
+              <p class="mt-4 text-lg leading-8 text-joaju-muted">
+                {t("history.2018.text")}
+              </p>
+            </div>
+            <img src="/historia/historia-1.webp" alt="Primeras acciones de voluntariado de Joaju" width="512" height="215" loading="lazy" decoding="async" class="h-auto w-full object-contain lg:h-full lg:min-h-[260px] lg:object-cover" />
+          </article>
+
+          <article class="overflow-hidden rounded-[1.6rem] border border-joaju-dark/10 bg-white/84 shadow-[0_18px_45px_rgba(10,58,42,0.08)]" data-animate="up" style="transition-delay:120ms">
+            <img src="/historia/historia-2.webp" alt="Nacimiento de la identidad Joaju" width="512" height="384" loading="lazy" decoding="async" class="h-56 w-full object-cover" />
+            <div class="p-7">
+              <span class="text-sm font-extrabold uppercase tracking-[0.16em] text-joaju-orange">{t("history.2021.label")}</span>
+              <p class="mt-4 text-lg leading-8 text-joaju-muted">
+                {t("history.2021.text")}
+              </p>
+            </div>
+          </article>
+
+          <article class="overflow-hidden rounded-[1.6rem] border border-joaju-dark/10 bg-white/84 shadow-[0_18px_45px_rgba(10,58,42,0.08)]" data-animate="up" style="transition-delay:180ms">
+            <img src="/historia/historia-3.webp" alt="Red de voluntariado Joaju en crecimiento" width="512" height="385" loading="lazy" decoding="async" class="h-56 w-full object-cover" />
+            <div class="p-7">
+              <span class="text-sm font-extrabold uppercase tracking-[0.16em] text-joaju-orange">{t("history.today.label")}</span>
+              <p class="mt-4 text-lg leading-8 text-joaju-muted">
+                {t("history.today.text")}
+              </p>
+            </div>
+          </article>
+
+          <article class="relative overflow-hidden rounded-[1.8rem] border border-joaju-dark/10 bg-joaju-dark text-white shadow-soft lg:col-span-2" data-animate="up" style="transition-delay:240ms">
+            <img src="/historia/historia-4.webp" alt="Historia de Joaju escrita entre todos" width="512" height="385" loading="lazy" decoding="async" class="absolute inset-0 h-full w-full object-cover opacity-45" />
+            <div class="absolute inset-0 bg-gradient-to-r from-joaju-dark/92 via-joaju-dark/78 to-joaju-dark/46"></div>
+            <div class="relative max-w-3xl p-8 md:p-10">
+              <span class="text-sm font-extrabold uppercase tracking-[0.16em] text-joaju-yellow">{t("history.together.label")}</span>
+              <p class="mt-4 text-2xl font-black leading-10">
+                {t("history.together.text")}
+              </p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="actividades" class="bg-white/55 py-24">
+      <div class="mx-auto w-[min(1120px,calc(100%-2rem))]">
+        <div class="mx-auto mb-12 max-w-[42rem] text-center" data-animate="up">
+          <span class="mb-4 inline-block text-[0.78rem] font-extrabold uppercase tracking-[0.16em] text-joaju-orange">{t("act.sub")}</span>
+          <h2 class="m-0 text-[clamp(2.2rem,5vw,3.6rem)] leading-[1.05] font-black">{t("act.title")}</h2>
+          <p class="mt-4 leading-7 text-joaju-muted">
+            {t("act.desc")}
+          </p>
+        </div>
+        <div class="grid gap-6 sm:grid-cols-2 xl:grid-cols-5">
+          {activityYears.map((year, index) => (
+            <a
+              href={link(`/actividades/${year}`)}
+              class="group relative overflow-hidden rounded-[1.8rem] border border-joaju-dark/10 bg-white/85 p-7 text-center shadow-soft transition hover:-translate-y-1"
+              data-animate="up"
+              style={`transition-delay:${index * 90}ms`}
+            >
+              <div class="absolute inset-x-6 bottom-5 h-px origin-left scale-x-0 bg-gradient-to-r from-joaju-yellow via-joaju-orange to-joaju-green transition duration-300 group-hover:scale-x-100"></div>
+              <span class="text-6xl font-black text-joaju-dark/70 transition duration-300 group-hover:text-joaju-dark">{year}</span>
+              <p class="mt-5 inline-flex translate-y-2 items-center gap-2 text-sm font-bold uppercase tracking-[0.16em] text-joaju-orange opacity-0 transition duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+                {t("act.btnView")}
+                <span class="text-base transition duration-300 group-hover:translate-x-1">→</span>
+              </p>
+            </a>
+          ))}
+        </div>
+        <div class="mt-10 text-center">
+          <a href={link("/actividades")} class="font-semibold text-joaju-orange transition hover:text-joaju-dark">
+            {t("act.btnViewAll")}
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section id="voluntariado" class="relative overflow-clip py-24 text-white">
+      <div class="bg-hero-overlay absolute inset-0"></div>
+      <div class="relative z-10 mx-auto grid w-[min(1120px,calc(100%-2rem))] items-center gap-12 md:grid-cols-2">
+        <img src="/joaju_light.webp" alt="Logo Joaju claro" width="520" height="176" loading="lazy" decoding="async" class="mx-auto w-[min(260px,70%)]" data-animate="scale" />
+        <div data-animate="up">
+          <span class="mb-4 inline-block text-[0.78rem] font-extrabold uppercase tracking-[0.16em] text-joaju-yellow">
+            {t("join.sub")}
+          </span>
+          <h2 class="m-0 text-[clamp(3rem,7vw,5.8rem)] leading-[0.95] font-black">{t("join.title")}</h2>
+          <div class="mt-6 max-w-[40rem] space-y-4 text-[1.1rem] leading-7 text-white/86">
+            <p>{t("join.p1")}</p>
+            <p>{t("join.p2")}</p>
+            <p class="pt-2 text-xl font-semibold text-white" set:html={t("join.p3")}>
+            </p>
+          </div>
+          <div class="mt-8 flex flex-wrap gap-4">
+            <a class="inline-flex min-w-[200px] items-center justify-center rounded-2xl bg-joaju-yellow px-6 py-4 font-extrabold text-joaju-dark transition hover:-translate-y-0.5" href={link("/donaciones")}>
+              {t("join.btnHelp")}
+            </a>
+            <a class="inline-flex min-w-[200px] items-center justify-center rounded-2xl bg-joaju-orange px-6 py-4 font-extrabold text-white transition hover:-translate-y-0.5" href="https://instagram.com/joajupy" target="_blank" rel="noreferrer">
+              {t("join.btnFollow")}
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-joaju-dark/10 bg-joaju-dark text-white">
+    <div class="mx-auto grid w-[min(1120px,calc(100%-2rem))] gap-10 py-14 md:grid-cols-[1.3fr_1fr_1fr]">
+      <div class="space-y-4">
+        <a href="#inicio" class="inline-flex items-center gap-3 font-extrabold tracking-[0.04em]">
+          <img src="/joaju_light.webp" alt="Logo Joaju claro" width="520" height="176" loading="lazy" decoding="async" class="h-11 w-auto" />
+        </a>
+      </div>
+
+      <div class="space-y-4">
+        <h3 class="text-sm font-extrabold uppercase tracking-[0.18em] text-joaju-yellow">{t("nav.navigation")}</h3>
+        <div class="grid gap-3 text-white/70">
+          {navItems.map((item) => (
+            <a href={item.href} class="transition hover:text-white">{item.label}</a>
+          ))}
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        <h3 class="text-sm font-extrabold uppercase tracking-[0.18em] text-joaju-yellow">{t("nav.contact")}</h3>
+        <div class="grid gap-3 text-white/70">
+          <a href="mailto:joajuvoluntario@gmail.com" class="transition hover:text-white">joajuvoluntario@gmail.com</a>
+          <div class="flex items-center gap-3">
+            <a href="https://instagram.com/joajupy" target="_blank" rel="noopener noreferrer" class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/14 bg-white/6 transition hover:-translate-y-0.5 hover:bg-white/12 hover:text-white" aria-label="Instagram de Joaju">
+              <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M7.8 2h8.4A5.8 5.8 0 0 1 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8A5.8 5.8 0 0 1 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2Zm0 2A3.8 3.8 0 0 0 4 7.8v8.4A3.8 3.8 0 0 0 7.8 20h8.4a3.8 3.8 0 0 0 3.8-3.8V7.8A3.8 3.8 0 0 0 16.2 4H7.8Zm8.7 2.5a1 1 0 1 1 0 2 1 1 0 0 1 0-2ZM12 7.25A4.75 4.75 0 1 1 12 16.75 4.75 4.75 0 0 1 12 7.25Zm0 2A2.75 2.75 0 1 0 12 14.75 2.75 2.75 0 0 0 12 9.25Z" />
+              </svg>
+            </a>
+            <a href="https://www.linkedin.com/company/joaju/" target="_blank" rel="noopener noreferrer" class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/14 bg-white/6 transition hover:-translate-y-0.5 hover:bg-white/12 hover:text-white" aria-label="LinkedIn de Joaju">
+              <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.95v5.66H9.34V8.98h3.41v1.57h.05a3.74 3.74 0 0 1 3.37-1.85c3.6 0 4.27 2.37 4.27 5.46v6.29ZM5.32 7.41a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12Zm1.78 13.04H3.54V8.98H7.1v11.47Z" />
+              </svg>
+            </a>
+            <a href="https://github.com/matiaguilera/joaju" target="_blank" rel="noopener noreferrer" class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/14 bg-white/6 transition hover:-translate-y-0.5 hover:bg-white/12 hover:text-white" aria-label="Repositorio de Joaju en GitHub">
+              <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12 2C6.48 2 2 6.59 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.09.68-.22.68-.49 0-.24-.01-.88-.01-1.73-2.78.62-3.37-1.37-3.37-1.37-.45-1.19-1.11-1.51-1.11-1.51-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.9 1.57 2.36 1.12 2.93.86.09-.67.35-1.12.64-1.38-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.37 9.37 0 0 1 12 6.98c.85 0 1.71.12 2.51.35 1.91-1.33 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.8-4.57 5.05.36.32.68.95.68 1.92 0 1.39-.01 2.51-.01 2.85 0 .27.18.59.69.49A10.23 10.23 0 0 0 22 12.25C22 6.59 17.52 2 12 2Z" />
+              </svg>
+            </a>
+          </div>
+          <span>{t("nav.address")}</span>
+          <a href="tel:+595986303376" class="transition hover:text-white">+595 986 303 376</a>
+          <span>{t("nav.tagline")}</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const mobileMenu = document.querySelector<HTMLDetailsElement>("[data-mobile-menu]");
+    const donationSuccess = document.querySelector<HTMLElement>("#donation-success");
+
+    mobileMenu?.querySelectorAll<HTMLAnchorElement>("[data-mobile-menu-link]").forEach((link) => {
+      link.addEventListener("click", () => {
+        mobileMenu.open = false;
+      });
+    });
+
+    if (new URLSearchParams(window.location.search).get("donacion") === "enviada") {
+      donationSuccess?.classList.remove("hidden");
+      window.history.replaceState({}, "", window.location.pathname + window.location.hash);
+    }
+
+    donationSuccess?.querySelector<HTMLButtonElement>("[data-close-donation-success]")?.addEventListener("click", () => {
+      donationSuccess.classList.add("hidden");
+    });
+  </script>
+</BaseLayout>

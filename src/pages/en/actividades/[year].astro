@@ -1,0 +1,14 @@
+---
+import ActivitiesByYearPage from "../../../components/ActivitiesByYearPage.astro";
+import { activityYears } from "../../../data/activities";
+
+export function getStaticPaths() {
+  return activityYears.map((year) => ({
+    params: { year: String(year) }
+  }));
+}
+
+const { year } = Astro.params;
+---
+
+<ActivitiesByYearPage lang="en" year={Number(year)} />

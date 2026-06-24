@@ -1,0 +1,72 @@
+---
+const { pathname } = Astro.url;
+let cleanPath = pathname;
+
+if (cleanPath.startsWith("/pt/")) {
+  cleanPath = cleanPath.substring(3);
+} else if (cleanPath.startsWith("/en/")) {
+  cleanPath = cleanPath.substring(3);
+} else if (cleanPath.startsWith("/gn/")) {
+  cleanPath = cleanPath.substring(3);
+} else if (cleanPath === "/pt" || cleanPath === "/en" || cleanPath === "/gn") {
+  cleanPath = "/";
+}
+
+if (!cleanPath.startsWith("/")) {
+  cleanPath = "/" + cleanPath;
+}
+
+const esUrl = cleanPath;
+const ptUrl = `/pt${cleanPath === "/" ? "" : cleanPath}`;
+const enUrl = `/en${cleanPath === "/" ? "" : cleanPath}`;
+const gnUrl = `/gn${cleanPath === "/" ? "" : cleanPath}`;
+
+const currentLocale = Astro.currentLocale || "es";
+---
+
+<div class="flex items-center gap-1 rounded-xl border border-joaju-dark/8 bg-white/70 p-1 text-[0.82rem] font-bold shadow-sm backdrop-blur-md">
+  <a
+    href={esUrl}
+    class:list={[
+      "px-2.5 py-1.5 rounded-lg transition-all duration-200",
+      currentLocale === "es"
+        ? "bg-joaju-orange text-white shadow-sm"
+        : "text-joaju-muted hover:bg-joaju-dark/5 hover:text-joaju-orange"
+    ]}
+  >
+    ES
+  </a>
+  <a
+    href={ptUrl}
+    class:list={[
+      "px-2.5 py-1.5 rounded-lg transition-all duration-200",
+      currentLocale === "pt"
+        ? "bg-joaju-orange text-white shadow-sm"
+        : "text-joaju-muted hover:bg-joaju-dark/5 hover:text-joaju-orange"
+    ]}
+  >
+    PT
+  </a>
+  <a
+    href={enUrl}
+    class:list={[
+      "px-2.5 py-1.5 rounded-lg transition-all duration-200",
+      currentLocale === "en"
+        ? "bg-joaju-orange text-white shadow-sm"
+        : "text-joaju-muted hover:bg-joaju-dark/5 hover:text-joaju-orange"
+    ]}
+  >
+    EN
+  </a>
+  <a
+    href={gnUrl}
+    class:list={[
+      "px-2.5 py-1.5 rounded-lg transition-all duration-200",
+      currentLocale === "gn"
+        ? "bg-joaju-orange text-white shadow-sm"
+        : "text-joaju-muted hover:bg-joaju-dark/5 hover:text-joaju-orange"
+    ]}
+  >
+    GN
+  </a>
+</div>

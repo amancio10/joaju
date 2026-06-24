@@ -1,0 +1,98 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import LanguageSwitcher from "./LanguageSwitcher.astro";
+import { getActivity } from "../data/activities";
+import { useL10n } from "../data/translations";
+
+const { lang = "es", year, slug } = Astro.props;
+const { t, link } = useL10n(lang);
+
+const activity = getActivity(year, slug, lang);
+const gallery = activity?.gallery ?? [];
+---
+
+{activity ? (
+  <BaseLayout title={`${activity.title} | Joaju`} lang={lang}>
+    <main class="min-h-screen py-24">
+      <section class="mx-auto w-[min(1120px,calc(100%-2rem))]">
+        <div class="flex items-center justify-between gap-4 flex-wrap mb-8">
+          <a
+            href={link(`/actividades/${activity.year}`)}
+            class="text-sm font-semibold text-joaju-muted transition hover:text-joaju-orange"
+          >
+            {t("nav.backToYear", { year: activity.year })}
+          </a>
+          <LanguageSwitcher />
+        </div>
+
+        {activity.heroImage && (
+          <div class="mt-8 overflow-hidden rounded-[2rem] border border-joaju-dark/10 bg-white shadow-soft">
+            <img src={activity.heroImage} alt={activity.title} fetchpriority="high" decoding="async" class="h-[360px] w-full object-cover md:h-[460px]" />
+          </div>
+        )}
+
+        <div class="mt-8 grid gap-10 lg:grid-cols-[1.2fr_0.8fr]">
+          <div>
+            <span class="inline-flex rounded-full bg-joaju-orange/15 px-3.5 py-2 text-sm font-bold text-joaju-orange">
+              {activity.year} · {activity.dateLabel}
+            </span>
+            <h1 class="mt-5 text-[clamp(2.8rem,6vw,4.6rem)] font-black leading-[0.95] text-joaju-dark">
+              {activity.title}
+            </h1>
+
+            <div class="mt-6 space-y-5 text-lg leading-8 text-joaju-muted">
+              {activity.description.map((paragraph: string) => (
+                <p>{paragraph}</p>
+              ))}
+            </div>
+          </div>
+
+          <aside class="rounded-[1.8rem] border border-joaju-dark/10 bg-white/85 p-7 shadow-soft">
+            <h2 class="text-xl font-black text-joaju-dark">{t("act.detailsTitle")}</h2>
+            <div class="mt-5 space-y-4 text-joaju-muted">
+              <div>
+                <span class="block text-sm font-bold uppercase tracking-[0.14em] text-joaju-orange">{t("act.detailsDate")}</span>
+                <span>{activity.dateLabel}</span>
+              </div>
+              <div>
+                <span class="block text-sm font-bold uppercase tracking-[0.14em] text-joaju-orange">{t("act.detailsLocation")}</span>
+                <span>{activity.location}</span>
+              </div>
+              <div>
+                <span class="block text-sm font-bold uppercase tracking-[0.14em] text-joaju-orange">{t("act.detailsSummary")}</span>
+                <span>{activity.summary}</span>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      {gallery.length > 0 && (
+      <section class="mx-auto mt-20 w-[min(1120px,calc(100%-2rem))]">
+        <div class="max-w-3xl">
+          <span class="mb-4 inline-block rounded-full bg-white/80 px-3.5 py-2 text-[0.78rem] font-extrabold uppercase tracking-[0.16em] text-joaju-orange">
+            {t("act.gallerySub")}
+          </span>
+          <h2 class="m-0 text-[clamp(2.2rem,5vw,3.8rem)] font-black leading-[1] text-joaju-dark">
+            {t("act.galleryTitle")}
+          </h2>
+        </div>
+
+        <div class="mt-10 grid gap-6 md:grid-cols-3">
+          {gallery.map((image: string, index: number) => (
+            <div class="overflow-hidden rounded-[1.6rem] border border-joaju-dark/10 bg-white shadow-soft">
+              <img
+                src={image}
+                alt={t("act.galleryAlt", { title: activity.title, index: index + 1 })}
+                loading="lazy"
+                decoding="async"
+                class="h-72 w-full object-cover transition duration-500 hover:scale-105"
+              />
+            </div>
+          ))}
+        </div>
+      </section>
+      )}
+    </main>
+  </BaseLayout>
+) : null}
