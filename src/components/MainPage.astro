@@ -22,8 +22,8 @@ const committee = [
   { name: "Marcelo Villalba", role: "Secretario", image: "/miembros/marcelo.webp" },
   { name: "Maria Inés Benitez", role: "Organizadora", image: "/miembros/ines.webp" },
   { name: "Montserrat Moré", role: "Organizadora", image: "/miembros/montserrat.webp" },
-  { name: "Sofia Torres", role: "Organizadora", image: "/miembros/sofia.webp" },
-  { name: "Amâncio Santos", role: "Organizador", image: "/miembros/amancio.webp" }
+  { name: "Sofia Torres", role: "Organizadora", image: "/miembros/sofia.webp" }
+  //{ name: "Amâncio Santos", role: "Organizador", image: "/miembros/amancio.webp" }
 ];
 
 const committeeRoles: Record<string, string> = {
@@ -67,19 +67,13 @@ const announcements = [
     title: t("announcement1.title"),
     description: t("announcement1.desc"),
     tone: "yellow",
-    image: "https://images.unsplash.com/photo-1615461066841-6116e61058f4?auto=format&fit=crop&w=700&q=75"
+    image: "https://live.staticflickr.com/65535/53758164179_5a8f032ce2_b.jpg"
   },
   {
     title: t("announcement2.title"),
     description: t("announcement2.desc"),
     tone: "orange",
-    image: "https://images.unsplash.com/photo-1584515933487-779824d29309?auto=format&fit=crop&w=700&q=75"
-  },
-  {
-    title: t("announcement3.title"),
-    description: t("announcement3.desc"),
-    tone: "green",
-    image: "https://images.unsplash.com/photo-1516826957135-700dedea698c?auto=format&fit=crop&w=700&q=75"
+    image: "/imagenes/torneio.webp"
   }
 ];
 
@@ -107,18 +101,23 @@ const toneMap = {
 };
 
 const remoteImage = (image: string, width: number, quality = 72) => {
-  const url = new URL(image);
-  url.searchParams.set("w", String(width));
-  if (url.hostname.includes("unsplash.com")) {
-    url.searchParams.set("auto", "format");
-    url.searchParams.set("fit", "crop");
-    url.searchParams.set("q", String(quality));
+  if (image.startsWith('/')) return image;
+  try {
+    const url = new URL(image);
+    url.searchParams.set("w", String(width));
+    if (url.hostname.includes("unsplash.com")) {
+      url.searchParams.set("auto", "format");
+      url.searchParams.set("fit", "crop");
+      url.searchParams.set("q", String(quality));
+    }
+    if (url.hostname.includes("pexels.com")) {
+      url.searchParams.set("auto", "compress");
+      url.searchParams.set("cs", "tinysrgb");
+    }
+    return url.toString();
+  } catch (e) {
+    return image;
   }
-  if (url.hostname.includes("pexels.com")) {
-    url.searchParams.set("auto", "compress");
-    url.searchParams.set("cs", "tinysrgb");
-  }
-  return url.toString();
 };
 
 const remoteSrcset = (image: string, widths: number[], quality = 72) =>

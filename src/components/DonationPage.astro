@@ -34,7 +34,6 @@ const { t, link } = useL10n(lang);
           <div class="mt-8 rounded-[1.8rem] border border-joaju-dark/10 bg-white/85 p-6 shadow-soft">
             <h2 class="m-0 text-xl font-black text-joaju-dark">{t("don.waysTitle")}</h2>
             <div class="mt-5 grid gap-3 text-joaju-muted">
-              <div class="rounded-xl bg-joaju-cream px-4 py-3">{t("don.way1")}</div>
               <div class="rounded-xl bg-joaju-cream px-4 py-3">{t("don.way2")}</div>
               <div class="rounded-xl bg-joaju-cream px-4 py-3">{t("don.way3")}</div>
               <div class="rounded-xl bg-joaju-cream px-4 py-3">{t("don.way4")}</div>
@@ -90,10 +89,6 @@ const { t, link } = useL10n(lang);
           <fieldset class="mt-6">
             <legend class="text-sm font-bold uppercase tracking-[0.14em] text-joaju-orange">{t("form.howHelp")}</legend>
             <div class="mt-4 grid gap-3 sm:grid-cols-2">
-              <label class="flex items-center gap-3 rounded-xl border border-joaju-dark/10 bg-joaju-cream px-4 py-3 text-joaju-dark">
-                <input type="checkbox" name="ayuda" value="Aporte monetario" class="accent-[#ff5733]" />
-                <span>{t("form.optMonetary")}</span>
-              </label>
               <label class="flex items-center gap-3 rounded-xl border border-joaju-dark/10 bg-joaju-cream px-4 py-3 text-joaju-dark">
                 <input type="checkbox" name="ayuda" value="Insumos" class="accent-[#ff5733]" />
                 <span>{t("form.optClothing")}</span>

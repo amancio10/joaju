@@ -50,12 +50,10 @@ export const translations = {
     // Announcements
     "announcements.sub": "Anuncios",
     "announcements.title": "Anuncios y próximos eventos",
-    "announcement1.title": "Banco de Sangre",
-    "announcement1.desc": "Una iniciativa orientada a promover la donación voluntaria y el compromiso solidario con la comunidad.",
-    "announcement2.title": "Capacitación Primeros Auxilios",
-    "announcement2.desc": "Una actividad pensada para fortalecer conocimientos básicos y preparación ante situaciones de emergencia.",
-    "announcement3.title": "Campaña Manos que abrigan",
-    "announcement3.desc": "Una campaña solidaria enfocada en acompañar a quienes más lo necesitan con abrigo y apoyo cercano.",
+    "announcement1.title": "Día del Niño",
+    "announcement1.desc": "Celebramos el día del niño con juegos y actividades para los más pequeños.",
+    "announcement2.title": "Torneo Joaju",
+    "announcement2.desc": "Participa de nuestro torneo deportivo solidario.",
     
     // Committee Roles
     "role.organizer": "Organizador",
@@ -203,12 +201,10 @@ export const translations = {
     // Announcements
     "announcements.sub": "Anúncios",
     "announcements.title": "Anúncios e próximos eventos",
-    "announcement1.title": "Banco de Sangue",
-    "announcement1.desc": "Uma iniciativa voltada para promover a doação voluntária e o compromisso solidário com a comunidade.",
-    "announcement2.title": "Capacitação em Primeiros Socorros",
-    "announcement2.desc": "Uma atividade pensada para fortalecer conhecimentos básicos e a preparação diante de situações de emergência.",
-    "announcement3.title": "Campanha Mãos que Acolhem",
-    "announcement3.desc": "Uma campanha solidária focada em acompanhar aqueles que mais precisam com agasalho e apoio próximo.",
+    "announcement1.title": "Dia das Crianças",
+    "announcement1.desc": "Celebramos o dia das crianças com jogos e atividades para os mais pequenos.",
+    "announcement2.title": "Torneio Joaju",
+    "announcement2.desc": "Participe do nosso torneio esportivo solidário.",
     
     // Committee Roles
     "role.organizer": "Organizador",
@@ -356,12 +352,10 @@ export const translations = {
     // Announcements
     "announcements.sub": "Announcements",
     "announcements.title": "Announcements and upcoming events",
-    "announcement1.title": "Blood Bank",
-    "announcement1.desc": "An initiative oriented to promote voluntary donation and solidary commitment to the community.",
-    "announcement2.title": "First Aid Training",
-    "announcement2.desc": "An activity designed to strengthen basic knowledge and preparedness for emergency situations.",
-    "announcement3.title": "Hands that Warm Campaign",
-    "announcement3.desc": "A solidarity campaign focused on supporting those who need it most with clothing and close support.",
+    "announcement1.title": "Children's Day",
+    "announcement1.desc": "We celebrate children's day with games and activities for the little ones.",
+    "announcement2.title": "Joaju Tournament",
+    "announcement2.desc": "Participate in our solidarity sports tournament.",
     
     // Committee Roles
     "role.organizer": "Organizer",
@@ -509,12 +503,10 @@ export const translations = {
     // Announcements
     "announcements.sub": "Marandu",
     "announcements.title": "Marandu ha tembiapo oútava",
-    "announcement1.title": "Tuguy Ñongatuha",
-    "announcement1.desc": "Peteĩ tembiapo ohecháva oipytyvõ tuguy me'ẽ jehegui ha oipytyvõ atýpe.",
-    "announcement2.title": "Mbo'epy Ñepytyvõ Ñepyrũrã",
-    "announcement2.desc": "Peteĩ tembiapo oñeimo'ãva omohatã hag̃ua kuaaty ñepyrũ ha ñembosako'i oiko jave apañuãi.",
-    "announcement3.title": "Tembiapo Po Omoakãva",
-    "announcement3.desc": "Peteĩ tembiapo oipytyvõva umi oikotevẽvape ao ha pytyvõ hi'aguĩva.",
+    "announcement1.title": "Mitã Ára",
+    "announcement1.desc": "Vy'apavẽ mitã árape guarã, ñembosarái ha vy'a umi michĩvévape guarã.",
+    "announcement2.title": "Joaju Ñembosarái",
+    "announcement2.desc": "Eike ñande ñembosarái joajuhápe.",
     
     // Committee Roles
     "role.organizer": "Moakãhára",
@@ -635,7 +627,8 @@ export function useL10n(lang: string = "es") {
       if (cleanPath.startsWith("/pt/") || cleanPath.startsWith("/en/") || cleanPath.startsWith("/gn/") || cleanPath === "/pt" || cleanPath === "/en" || cleanPath === "/gn") {
         return cleanPath;
       }
-      return `${prefix}${cleanPath === "/" ? "" : cleanPath}`;
+      const result = `${prefix}${cleanPath === "/" ? "" : cleanPath}`;
+      return result || "/";
     }
   };
 }
